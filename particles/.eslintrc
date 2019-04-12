@@ -1,0 +1,22 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "plugins": [
+    "html"
+  ],
+  "globals": {
+    "THREE": false,
+    "d3": false,
+    "Stats": false
+  },
+  "rules": {
+    "no-multi-spaces": "off",
+    "indent": "off",
+    "no-unused-vars": "off",
+    "no-console": "off",
+    "object-curly-spacing": "off"
+  }
+}

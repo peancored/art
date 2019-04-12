@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+
+  <script>
+    var iter = 0;
+    class Rectangle {
+      constructor(x, y, width, height, speedX, speedY, color) {
+        this.iter = 0.1;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.c_width = width;
+        this.c_height = height;
+        this.speedX = speedX;
+        this.speedY = speedY;
+        this.color = color;
+        this.previousPositions = [];
+        
+      }
+
+      inverseSpeedX () {
+        this.speedX = -this.speedX;
+      }
+
+      inverseSpeedY () {
+        this.speedY = -this.speedY;
+      }
+
+      stepX () {
+        this.x += this.speedX;  
+      }
+
+      stepY () {
+        this.y += this.speedY;
+      }
+
+      step () {
+        this.iter = this.iter + 0.01;
+        this.width = this.c_width * Math.abs(Math.sin(this.iter));
+        this.height = this.c_height * Math.abs(Math.sin(this.iter));
+        if (this.previousPositions.length > 100) {
+          this.previousPositions.pop();
+        }
+
+        this.previousPositions.unshift({x: this.x, y: this.y});
+
+        this.stepX();
+        this.stepY();
+      }
+    }
+
+    function getColor (r, g, b, a) {
+      return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+    }
+
+    function getRandomColor() {
+      return {
+        r: Math.floor(Math.random() * 1000 % 255),
+        g: Math.floor(Math.random() * 1000 % 255),
+        b: Math.floor(Math.random() * 1000 % 255),
+        a: 1
+      }
+    }
+
+    function draw() {
+      var canvas = document.getElementById("tutorial");
+      var ctx = canvas.getContext("2d");
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', function() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+
+      var rectangles = [];
+
+      for(i = 0; i < 100; i ++) {
+        var x = Math.floor(getRandomValue(0, canvas.width - 64));
+        var y = Math.floor(getRandomValue(0, canvas.height - 64));
+        var speedX = getRandomValue(-10, 10);
+        var speedY = getRandomValue(-10, 10);
+        var color = getRandomColor();
+
+        rectangles.push(new Rectangle(x, y, 40, 40, speedX, speedY, color));
+      }
+
+      var interval = setInterval(function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        rectangles.forEach(function(rectangle) {
+          rectangle.step();
+
+          if (rectangle.x + rectangle.width >= canvas.width || rectangle.x <= 0) {
+            rectangle.inverseSpeedX();
+          }
+
+          if (rectangle.y + rectangle.height >= canvas.height || rectangle.y <= 0) {
+            rectangle.inverseSpeedY();
+          }
+        
+          ctx.fillStyle = getColor(rectangle.color.r, rectangle.color.g, rectangle.color.b, rectangle.color.a);
+
+          ctx.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+          rectangle.previousPositions.forEach(function(position, index) {
+            ctx.fillStyle = getColor(rectangle.color.r, rectangle.color.g, rectangle.color.b, rectangle.color.a - (rectangle.color.a / rectangle.previousPositions.length) * index );
+            ctx.fillRect(position.x, position.y, rectangle.width, rectangle.height);
+          });
+        });    
+      }, 1);
+
+    }
+
+    function getRandomValue(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+  </script>
+
+  <style>
+    canvas {
+    }
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+<body onload="draw();">
+  <canvas id="tutorial" width="1560" height="804"></canvas>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+  <script>
+    function draw() {
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      var particles = [];
+
+      for(var i = 0; i < 100000; i++) {
+        var radius = 100;
+        var offset = 200;
+        var x = Math.random()*canvas.width;
+        var y = Math.random()*canvas.height;
+        if (Math.pow(x - offset, 2) + Math.pow(y - offset, 2) <= Math.pow(radius, 2)) {
+          particles.push({x: x, y: y});
+          ctx.fillRect(x,y,10,10);
+        }
+      }
+
+      function render() {
+        canvas.width = canvas.width;
+        particles.forEach(function(particle) {
+          particle.x += 0.01*(particle.x - 200);
+          particle.y += 0.01*(particle.y - 200);
+          ctx.fillRect(particle.x, particle.y, 1, 1);
+        });
+        requestAnimationFrame(render);
+      }
+
+      render();
+    } 
+  </script>
+</head>
+<body onload="draw();">
+  <canvas id="canvas" width="400" height="400"></canvas>
+
+</body>
+</html>

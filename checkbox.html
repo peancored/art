@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    body {
+      padding: 10px;
+    }
+
+    .bubble {
+      height: 20px;
+      width: 38px;
+      background: #b5b5b5;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bubble::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 15px;
+      height: 15px;
+      left: 0;
+      transform: translateY(-50%);
+      background: #fff;
+      border-radius: 10px;
+      z-index: 1;
+      border: 2px solid #b5b5b5;
+      transition: all 0.1s ease-in-out;
+    }
+
+    .bubble::before {
+      width: calc(38px - 17px/2);
+      height: 20px;
+      background: #19a652;
+      position: absolute;
+      content: '';
+      top: 50%;
+      left: -100%;
+      transform: translateY(-50%);
+      z-index: 0;
+      border-radius: 10px 0 0 10px;
+      transition: all 0.1s ease-in-out;
+    }
+
+    .bubble[checked]::before {
+      left: 0;
+    }
+
+    .bubble[checked]::after {
+      border: 2px solid #19a652;
+      right: 0;
+      left: calc(100% - 19px);
+    }
+
+    //  width: calc(38px - 17px/2);
+    //  height: 20px;
+    //  background: #19a652;
+    //  position: absolute;
+    //  content: '';
+    //  top: 50%;
+    //  left: -100%;
+    //  transform: translateY(-50%);
+    //  z-index: 0;
+    //  border-radius: 10px 0 0 10px;
+    //  transition: all 0.1s ease-in-out;
+    }
+
+    //.checkbox {
+    //  height: 20px;
+    //  width: 38px;
+    //  background: #b5b5b5;
+    //  border-radius: 10px;
+    //  position: relative;
+    //  overflow: hidden;
+    //}
+
+    //.checkbox:focus {
+    //  outline: none;
+    //}
+
+    //.bubble {
+    //  position: absolute;
+    //  top: 50%;
+    //  width: 15px;
+    //  height: 15px;
+    //  left: 0;
+    //  transform: translateY(-50%);
+    //  background: #fff;
+    //  border-radius: 10px;
+    //  z-index: 1;
+    //  border: 2px solid #b5b5b5;
+    //  transition: all 0.1s ease-in-out;
+    //}
+
+    //.checkbox[checked] .bubble {
+    //  border: 2px solid #19a652;
+    //  right: 0;
+    //  left: calc(100% - 19px);
+    //}
+
+    //.checkbox::before {
+    //  width: calc(38px - 17px/2);
+    //  height: 20px;
+    //  background: #19a652;
+    //  position: absolute;
+    //  content: '';
+    //  top: 50%;
+    //  left: -100%;
+    //  transform: translateY(-50%);
+    //  z-index: 0;
+    //  border-radius: 10px 0 0 10px;
+    //  transition: all 0.1s ease-in-out;
+    //}
+
+    //.checkbox[checked]::before {
+    //  left: 0;
+    //}
+
+  </style>
+</head>
+<body>
+  <div id="checkbox" class="checkbox" onclick="toggleCheckbox();" tabindex="0">
+    <div id="bubble" class="bubble"></div>
+  </div>
+
+  <script>
+    var checkbox = document.getElementById("bubble");
+
+    function toggleCheckbox() {
+      if (!checkbox.getAttribute("checked")) {
+        checkbox.setAttribute("checked", "true");
+      } else {
+        checkbox.removeAttribute("checked");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+
+  <script>
+    tailMixin = function (baseClass) {
+      return class extends baseClass {
+        constructor() {
+          super();
+          var args = [...arguments];
+          this.tailLength = args[args.length - 1] || 0;
+          this.previousPositions = [];
+        }
+
+        step() {
+          this.previousPositions.unshift({x: this.x, y: this.y});
+
+          if (this.previousPositions.length > this.tailLength) {
+            this.previousPositions.pop();
+          }
+
+          this.stepX();
+          this.stepY();
+        }
+      }
+    }
+
+    class Figure {
+      inverseSpeedX () {
+        this.speedX = -this.speedX;
+      }
+
+      inverseSpeedY () {
+        this.speedY = -this.speedY;
+      }
+
+      stepX () {
+        this.x += this.speedX;
+        this.x = Math.floor(this.x);
+      }
+
+      stepY () {
+        this.y += this.speedY;
+        this.y = Math.floor(this.y);
+      }
+
+      step () {
+        this.stepX();
+        this.stepY();
+      }
+    }
+
+    class Rectangle extends tailMixin(Figure) {
+      constructor(x, y, width, height, speedX, speedY, color) {
+        super(...arguments);
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.speedX = speedX;
+        this.speedY = speedY;
+        this.color = color;
+      }
+    }
+
+    class Circle extends tailMixin(Figure) {
+      constructor (x, y, radius, speedX, speedY, color) {
+        super(...arguments);
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.speedX = speedX;
+        this.speedY = speedY;
+        this.color = color;
+      }
+    }
+
+    function getColor (r, g, b, a) {
+      return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+    }
+
+    function getRandomColor() {
+      return {
+        r: Math.floor(Math.random() * 1000 % 255),
+        g: Math.floor(Math.random() * 1000 % 255),
+        b: Math.floor(Math.random() * 1000 % 255),
+        a: 1
+      }
+    }
+
+    function draw() {
+      canvas = document.getElementById("tutorial");
+      ctx = canvas.getContext("2d");
+
+      var width = 20;
+      var height = 20;
+
+      window.addEventListener('click', function () {
+        randomizeSpeed();
+      });
+
+      setInterval(randomizeSpeed, 100);
+
+      rectangles = [];
+      circles = [];
+
+      for(i = 0; i < 100; i ++) {
+        var x = Math.floor(getRandomValue(0, canvas.width - width));
+        var y = Math.floor(getRandomValue(0, canvas.height - width));
+        var speedX = getRandomValue(-5, 5);
+        var speedY = getRandomValue(-5, 5);
+        var color = getRandomColor();
+
+        rectangles.push(new Rectangle(x, y, width, height, speedX, speedY, color, 0));
+      }
+
+      for(i = 0; i < 100; i ++) {
+        var x = Math.floor(getRandomValue(0, canvas.width - width));
+        var y = Math.floor(getRandomValue(0, canvas.height - width));
+        var speedX = getRandomValue(-5, 5);
+        var speedY = getRandomValue(-5, 5);
+        var color = getRandomColor();
+
+        circles.push(new Circle(x, y, 15, speedX, speedY, color, 50));
+      }
+
+      animation();
+
+    }
+
+    function randomizeSpeed() {
+      rectangles.forEach(function(rectangle) {
+        rectangle.speedX = getRandomValue(-4, 5);
+        rectangle.speedY = getRandomValue(-4, 5);
+      });
+      circles.forEach(function(circle) {
+        circle.speedX = getRandomValue(-5, 5);
+        circle.speedY = getRandomValue(-5, 5);
+      });
+    }
+
+    function animation() {
+
+      //canvas.width = canvas.width;
+
+      circleFrame();
+
+      requestAnimationFrame(animation);
+    }
+
+    function rectangleFrame() {
+
+      rectangles.forEach(function(rectangle) {
+        rectangle.step();
+
+        if (rectangle.x + rectangle.width >= canvas.width && rectangle.speedX > 0) {
+          rectangle.inverseSpeedX();
+        } else if (rectangle.x <= 0 && rectangle.speedX < 0) {
+          rectangle.inverseSpeedX();
+        }
+
+        if (rectangle.y + rectangle.height >= canvas.height && rectangle.speedY > 0) {
+          rectangle.inverseSpeedY();
+        } else if (rectangle.y <= 0 && rectangle.speedY < 0) {
+          rectangle.inverseSpeedY();
+        }
+      
+        ctx.fillStyle = getColor(rectangle.color.r, rectangle.color.g, rectangle.color.b, rectangle.color.a);
+
+        ctx.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+
+        rectangle.previousPositions.forEach(function(position, index) {
+          ctx.fillStyle = getColor(rectangle.color.r, rectangle.color.g, rectangle.color.b, rectangle.color.a - (rectangle.color.a / rectangle.previousPositions.length) * index );
+          ctx.fillRect(position.x, position.y, rectangle.width, rectangle.height);
+        });
+      });    
+    }
+
+    function circleFrame() {
+
+      circles.forEach(function(circle) {
+        circle.step();
+
+        if (circle.x + circle.radius >= canvas.width && circle.speedX > 0) {
+          circle.inverseSpeedX();
+        } else if (circle.x - circle.radius <= 0 && circle.speedX < 0) {
+          circle.inverseSpeedX();
+        }
+
+        if (circle.y + circle.radius >= canvas.height && circle.speedY > 0) {
+          circle.inverseSpeedY();
+        } else if (circle.y - circle.radius <= 0 && circle.speedY < 0) {
+          circle.inverseSpeedY();
+        }
+      
+        ctx.fillStyle = getColor(circle.color.r, circle.color.g, circle.color.b, circle.color.a);
+
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, circle.radius, 0, 2*Math.PI);
+        ctx.fill();
+
+        circle.previousPositions.forEach(function(position, index) {
+          ctx.fillStyle = getColor(circle.color.r, circle.color.g, circle.color.b, circle.color.a - (circle.color.a / circle.previousPositions.length) * index );
+          ctx.beginPath();
+          ctx.arc(position.x, position.y, circle.radius, 0, 2*Math.PI);
+          ctx.fill();
+        });
+      });    
+    }
+
+    function getRandomValue(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+  </script>
+
+  <style>
+    canvas {
+    }
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+<body onload="draw();">
+  <canvas id="tutorial" width="1000" height="1000"></canvas>
+
+</body>
+</html>

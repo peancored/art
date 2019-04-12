@@ -1,0 +1,20 @@
+{
+  "name": "painting",
+  "authors": [
+    "Anton Korolkov <toshegg190494@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "imagetracerjs": "^1.2.1"
+  }
+}

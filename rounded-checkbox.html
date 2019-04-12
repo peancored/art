@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    .checkbox {
+      position: relative;
+    }
+
+    .checkbox::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 2px solid #e0e0e0;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+    }
+
+    .checkbox::after {
+      content: '';
+    }
+
+    .checkbox[checked]::after {
+      width: 20px;
+      height: 20px;
+      top: 2px;
+      left: 2px;
+      border-radius: 50%;
+      background: #d85d48;
+      box-sizing: border-box;
+      position: absolute;
+      border: 3px solid #fff;
+    }
+
+    .checkbox[checked]::before {
+      border: 2px solid #d85d48;
+    }
+  </style>
+</head>
+<body>
+  <div id="checkbox" class="checkbox"></div>
+  <script>
+    var checked = false;
+
+    var checkbox = document.getElementById('checkbox');
+    checkbox.addEventListener('click', function () {
+      if (checked) {
+        checked = false;
+        checkbox.removeAttribute('checked');
+      } else {
+        checked = true;
+        checkbox.setAttribute('checked', true);
+      }
+    });
+  </script>
+</body>
+</html>

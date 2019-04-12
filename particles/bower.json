@@ -1,0 +1,21 @@
+{
+  "name": "particles",
+  "authors": [
+    "Anton Korolkov <toshegg190494@gmail.com>"
+  ],
+  "description": "ThreeJS particles",
+  "main": "index.html",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "stats.js": "*",
+    "three.js": "^0.93.0"
+  }
+}
